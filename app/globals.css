@@ -1,0 +1,346 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fafbfc;
+  --foreground: #0b1220;
+  --border: #e4e9f0;
+  --surface: #ffffff;
+  --surface-muted: #f6f8fb;
+}
+
+.dark {
+  --background: #060a14;
+  --foreground: #e6ebf4;
+  --border: #1c2436;
+  --surface: #0b1120;
+  --surface-muted: #0d1424;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7cfdb;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  background-clip: content-box;
+}
+
+.dark-scroll::-webkit-scrollbar-thumb {
+  background: #3f4756;
+  background-clip: content-box;
+}
+
+*:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.dark .monaco-editor,
+.dark .monaco-editor-background,
+.dark .monaco-editor .margin {
+  background-color: #0d1117 !important;
+}
+
+/* Prose for theory */
+.prose-lab {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: #334155;
+}
+.prose-lab p {
+  margin-bottom: 0.9rem;
+}
+.prose-lab ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0.9rem;
+}
+.prose-lab ul li {
+  position: relative;
+  padding-left: 1.15rem;
+  margin-bottom: 0.4rem;
+}
+.prose-lab ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: #4f46e5;
+}
+.prose-lab ol {
+  list-style: decimal;
+  margin-left: 1.2rem;
+  margin-bottom: 0.9rem;
+}
+.prose-lab ol li {
+  margin-bottom: 0.4rem;
+  padding-left: 0.25rem;
+}
+.prose-lab code {
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+  font-size: 0.82em;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-weight: 500;
+}
+.prose-lab strong {
+  font-weight: 600;
+  color: #0f172a;
+}
+/* Site-wide dark mode toggle (html.dark) — the Theory tab in the normal workspace. */
+.dark .prose-lab {
+  color: #cbd5e1;
+}
+.dark .prose-lab code {
+  background: rgba(129, 140, 248, 0.15);
+  color: #a5b4fc;
+}
+.dark .prose-lab strong {
+  color: #f1f5f9;
+}
+.dark .prose-lab ul li::before {
+  background: #818cf8;
+}
+
+/* Spinner */
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: rise 0.5s ease both;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Design utilities ---------- */
+
+/* Animated gradient headline text — deeper stops by default for contrast on
+   light backgrounds; the paler stops only kick in once .dark is active. */
+.text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    #4338ca 0%,
+    #4f46e5 25%,
+    #0891b2 50%,
+    #4f46e5 75%,
+    #4338ca 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-x 8s ease infinite;
+}
+.dark .text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    #a5b4fc 0%,
+    #818cf8 25%,
+    #22d3ee 50%,
+    #818cf8 75%,
+    #a5b4fc 100%
+  );
+}
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Subtle grid + dot patterns for hero surfaces */
+.bg-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(148, 163, 184, 0.09) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.bg-grid-dark {
+  background-image: linear-gradient(
+      to right,
+      rgba(129, 140, 248, 0.08) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(129, 140, 248, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.bg-dots {
+  background-image: radial-gradient(
+    rgba(129, 140, 248, 0.5) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+}
+
+/* Fades a pattern layer out toward the bottom edge */
+.mask-fade-b {
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+.mask-fade-edges {
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 80% at 50% 20%,
+    black 30%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 90% 80% at 50% 20%,
+    black 30%,
+    transparent 75%
+  );
+}
+
+/* Glass surface for floating chrome (navbar, pills) */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+.dark .glass {
+  background: rgba(8, 12, 24, 0.66);
+}
+
+/* Scroll-reveal: elements start hidden, .is-visible is added by Reveal.tsx */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .text-gradient,
+  .animate-float,
+  .animate-gradient-x {
+    animation: none;
+  }
+}
+
+/* Button shine sweep on hover */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* Card border that lights up on hover */
+.card-glow {
+  position: relative;
+}
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.55),
+    rgba(6, 182, 212, 0.35) 45%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.card-glow:hover::before {
+  opacity: 1;
+}
