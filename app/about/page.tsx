@@ -3,8 +3,8 @@ import PageHero from "@/components/PageHero";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About | ML Virtual Lab",
-  description: "About the Machine Learning Virtual Lab — course info, lab manual, safety rules, and evaluation rubric.",
+  title: "About | ML Theory + Virtual Labs",
+  description: "About Machine Learning Theory + Virtual Labs — course syllabus, theory modules, virtual experiments, and evaluation rubrics.",
 };
 
 export default function AboutPage() {
@@ -13,13 +13,13 @@ export default function AboutPage() {
       <PageHero
         compact
         crumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
-        eyebrow={`Machine Learning Laboratory · ${courseInfo.semester}`}
+        eyebrow={`Machine Learning Theory + Labs · ${courseInfo.semester}`}
         title={
           <>
-            About the <span className="text-gradient">Virtual Lab</span>
+            About <span className="text-gradient">ML Theory + Labs</span>
           </>
         }
-        description="Course information, how to use the lab, the technology behind it, laboratory rules and the evaluation rubric."
+        description="Comprehensive course information, syllabus theory modules, interactive coding environments, lab manuals, and evaluation rubrics."
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
@@ -35,6 +35,7 @@ export default function AboutPage() {
             <div><dt className="font-semibold text-slate-500 dark:text-slate-400">Semester</dt><dd className="text-slate-800 dark:text-slate-200">{courseInfo.semester}</dd></div>
             <div><dt className="font-semibold text-slate-500 dark:text-slate-400">Scheme</dt><dd className="text-slate-800 dark:text-slate-200">{courseInfo.scheme}</dd></div>
             <div><dt className="font-semibold text-slate-500 dark:text-slate-400">Lab</dt><dd className="text-slate-800 dark:text-slate-200">Lab 06</dd></div>
+            <div className="sm:col-span-2"><dt className="font-semibold text-slate-500 dark:text-slate-400">Faculty In-charge / Instructors</dt><dd className="text-slate-800 dark:text-slate-200">{courseInfo.faculty.join(" · ")}</dd></div>
           </div>
         </section>
 

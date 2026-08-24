@@ -25,9 +25,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ML Virtual Lab | Machine Learning Laboratory",
+  title: "ML Theory + Virtual Labs | Machine Learning Course & Laboratory",
   description:
-    "Interactive Machine Learning Virtual Lab for Mumbai University / SIES GST (CEL701 / CSL7001). Run real Python ML experiments in your browser with Pyodide.",
+    "Comprehensive Machine Learning Theory & Virtual Laboratory for Mumbai University / SIES GST (CEL701 / CSL7001). Full syllabus theory, quizzes, and live Python browser experiments with Pyodide.",
 };
 
 export default function RootLayout({

@@ -38,10 +38,6 @@ export default function Footer() {
               your browser — real Python, real plots, zero installs. Built for
               the {courseInfo.university} curriculum at {courseInfo.institute}.
             </p>
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11.5px] font-medium text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulse-dot" />
-              Powered by Pyodide · runs 100% locally
-            </div>
           </div>
 
           {/* Link columns */}
@@ -110,9 +106,6 @@ export default function Footer() {
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center dark:border-slate-800">
           <p className="text-[12px] text-slate-500 dark:text-slate-400">
             © {new Date().getFullYear()} {courseInfo.institute} · {courseInfo.department}
-          </p>
-          <p className="text-[12px] text-slate-400 dark:text-slate-500">
-            No accounts · No tracking · Your code never leaves your machine
           </p>
         </div>
       </div>

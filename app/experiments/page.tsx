@@ -19,13 +19,12 @@ export default function ExperimentsPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Experiments" }]}
-        eyebrow={`${experiments.length} experiments · interactive`}
+        eyebrow={`${experiments.length} experiments `}
         title={
           <>
             The experiment <span className="text-gradient">library</span>
           </>
         }
-        description="Every experiment opens a full lab environment — theory, procedure, a live Python editor and auto-graded quizzes. Filter by outcome or topic, or search for a concept."
       >
         <div className="mt-7 flex flex-wrap gap-2.5">
           {LO_LEGEND.map((lo) => (

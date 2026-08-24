@@ -58,11 +58,10 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 px-3 pt-3 sm:px-5">
       <div
-        className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 glass ${
-          scrolled
+        className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 glass ${scrolled
             ? "border-slate-200/90 shadow-lift dark:border-slate-700/60"
             : "border-slate-200/60 shadow-sm dark:border-slate-800/60"
-        }`}
+          }`}
       >
         <div className="flex h-14 items-center justify-between px-3 sm:px-4">
           <Link href="/" className="flex items-center gap-2.5">
@@ -73,7 +72,7 @@ export default function Navbar() {
             </span>
             <div className="leading-tight">
               <div className="text-[13px] font-display font-semibold text-ink tracking-tight dark:text-slate-100">
-                ML Virtual Lab
+                Machine Learning
               </div>
               <div className="text-[10px] text-slate-500 font-medium tracking-wide dark:text-slate-400">
                 SIES GST · University of Mumbai
@@ -89,11 +88,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all ${
-                    active
+                  className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all ${active
                       ? "bg-white text-ink shadow-sm dark:bg-slate-700 dark:text-white"
                       : "text-slate-500 hover:text-ink dark:text-slate-400 dark:hover:text-white"
-                  }`}
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -103,7 +101,7 @@ export default function Navbar() {
 
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
-           
+
             {/* Mobile menu button */}
             <button
               onClick={() => setMenuOpen((open) => !open)}
@@ -134,11 +132,10 @@ export default function Navbar() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[14px] font-medium transition-colors ${
-                        active
+                      className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[14px] font-medium transition-colors ${active
                           ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"
                           : "text-slate-600 hover:bg-slate-900/[0.04] dark:text-slate-300 dark:hover:bg-white/5"
-                      }`}
+                        }`}
                     >
                       {link.label}
                       {active && <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />}

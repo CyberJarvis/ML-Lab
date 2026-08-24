@@ -73,11 +73,11 @@ export const courseInfo = {
   university: "University of Mumbai",
   institute: "SIES Graduate School of Technology",
   department: "Department of Computer Engineering",
-  courseName: "Machine Learning Lab",
+  courseName: "Machine Learning Theory + Labs",
   courseCodes: ["CEL701", "CSL7001"],
   semester: "B.E. / Semester VII",
   scheme: "R-2019",
-  faculty: ["Dr. Aparna Bannore", "Dr. Rizwana Shaikh"],
+  faculty: ["Dr. Deepika Kumari"],
   labOutcomes: (Object.keys(labOutcomes) as LabOutcome[]).map((code) => ({
     code,
     text: labOutcomes[code].description,

@@ -3,6 +3,7 @@ import { experiments, courseInfo, labOutcomes } from "@/lib/experiments-data";
 import { courseHeader, syllabus } from "@/lib/syllabus";
 import ExperimentCard from "@/components/ExperimentCard";
 import Reveal from "@/components/Reveal";
+import InstructorSection from "@/components/InstructorSection";
 
 const FEATURES = [
   {
@@ -130,13 +131,13 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
           <div className="grid items-center gap-14 lg:grid-cols-2">
             <div>
-              <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-balance sm:text-6xl">
-                The Machine Learning
-                <span className="text-gradient block pb-1">virtual laboratory.</span>
+
+              <h1 className="mt-5 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+                Machine Learning
+                <span className="text-gradient block pb-1">Theory & Labs.</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
-                Ten university experiments with full theory, a real Python editor,
-                and live output — running entirely in your browser.
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
+                From fundamental mathematical concepts and comprehensive syllabus theory to interactive Python coding, quizzes, and live simulation experiments running directly in your browser.
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <Link
@@ -149,20 +150,20 @@ export default function HomePage() {
                   href="/theory"
                   className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-5 py-3 text-sm font-semibold text-ink backdrop-blur transition-colors hover:bg-slate-200 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
                 >
-                  Read the Theory
+                  Read Theory Notes
                 </Link>
                 <Link
                   href="/about"
                   className="inline-flex items-center gap-2 px-2 py-3 text-sm font-semibold text-slate-500 transition-colors hover:text-ink dark:text-slate-300 dark:hover:text-white"
                 >
-                  About the lab
+                  About Course
                 </Link>
               </div>
 
               <dl className="mt-12 grid max-w-xl grid-cols-4 gap-6 border-t border-slate-200 pt-8 dark:border-white/10">
                 {[
                   { k: `${experiments.length}`, v: "Experiments" },
-                  { k: `${syllabus.length}`, v: "Syllabus modules" },
+                  { k: `${syllabus.length}`, v: "Theory modules" },
                   { k: "3", v: "Lab outcomes" },
                   { k: "0", v: "Installs needed" },
                 ].map((s) => (
@@ -197,41 +198,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ---------- Instructor Section ---------- */}
+      <InstructorSection />
 
-      {/* ---------- Features ---------- */}
-      <section className="bg-white py-16 sm:py-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <Reveal>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-400">
-              Why this lab
-            </p>
-            <h2 className="mt-2 max-w-2xl font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
-              Built like a real lab, not a slideshow
-            </h2>
-            <p className="mt-3 max-w-2xl text-slate-500 dark:text-slate-400">
-              Everything you need to learn by doing — theory on the left, code
-              on the right, results underneath.
-            </p>
-          </Reveal>
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map((f, i) => (
-              <Reveal key={f.title} delay={i * 90}>
-                <div className="card-glow group h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${f.gradient} text-white shadow-md transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      {f.icon}
-                    </svg>
-                  </div>
-                  <h3 className="mt-4 font-semibold text-ink dark:text-slate-100">{f.title}</h3>
-                  <p className="mt-2 text-[13.5px] leading-relaxed text-slate-500 dark:text-slate-400">{f.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ---------- How it works ---------- */}
       <section className="relative overflow-hidden border-y border-slate-200 bg-slate-50 py-16 sm:py-20 dark:border-slate-800 dark:bg-slate-900/40">
@@ -380,7 +349,7 @@ export default function HomePage() {
                   The lab
                 </p>
                 <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
-                  The ten experiments
+                  The Experiments
                 </h2>
                 <p className="mt-3 text-slate-500 dark:text-slate-400">
                   Regression through to dimensionality reduction, in the order the syllabus takes them.
@@ -402,39 +371,6 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ---------- Final CTA ---------- */}
-      <section className="bg-white pb-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <Reveal>
-            <div className="relative overflow-hidden rounded-3xl bg-ink px-6 py-14 text-center text-white sm:px-12 sm:py-16">
-              <div className="relative">
-                <h2 className="mx-auto max-w-2xl font-display text-2xl font-semibold tracking-tight text-balance sm:text-4xl">
-                  Ready to train your first model?
-                </h2>
-                <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-slate-300">
-                  Open the lab, press Run, and watch a linear regression fit itself —
-                  all without leaving this browser tab.
-                </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                  <Link
-                    href={`/experiments/${experiments[0].id}`}
-                    className="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.98]"
-                  >
-                    Open Experiment 01 {ArrowIcon}
-                  </Link>
-                  <Link
-                    href="/experiments"
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/10"
-                  >
-                    Browse
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
     </div>
