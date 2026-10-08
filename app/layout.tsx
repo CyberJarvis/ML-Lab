@@ -1,22 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { PyodideProvider } from "@/components/PyodideProvider";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/components/ThemeProvider";
-import Navbar from "@/components/Navbar";
+import SiteMenu from "@/components/SiteMenu";
 import Footer from "@/components/Footer";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space",
-  display: "swap",
-});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -25,7 +13,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ML Theory + Virtual Labs | Machine Learning Course & Laboratory",
+  title: "Machine Learning | SIES Graduate School of Technology",
   description:
     "Comprehensive Machine Learning Theory & Virtual Laboratory for Mumbai University / SIES GST (CEL701 / CSL7001). Full syllabus theory, quizzes, and live Python browser experiments with Pyodide.",
 };
@@ -36,21 +24,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={jetbrainsMono.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className="font-sans antialiased bg-white text-ink dark:bg-slate-950 dark:text-slate-100">
+      <body className="font-sans">
         <ThemeProvider>
           <PyodideProvider>
-            <div className="min-h-screen flex flex-col">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+            <div className="jd-layout">
+              <SiteMenu />
+              <main id="layout-content">
+                {children}
+                <Footer />
+              </main>
             </div>
           </PyodideProvider>
         </ThemeProvider>
@@ -58,4 +44,3 @@ export default function RootLayout({
     </html>
   );
 }
-

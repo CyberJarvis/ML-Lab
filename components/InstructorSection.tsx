@@ -94,10 +94,6 @@ export default function InstructorSection() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal>
           <div className="flex flex-col items-start gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50/80 px-3.5 py-1 text-[11.5px] font-semibold uppercase tracking-wider text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-600 dark:bg-brand-400" />
-              Course Instructor
-            </span>
             <h2 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl dark:text-slate-100">
               Meet Your <span className="text-gradient">Instructor</span>
             </h2>
@@ -373,10 +369,6 @@ export default function InstructorSection() {
         <div className="mt-16 border-t border-slate-200/80 pt-14 dark:border-slate-800">
           <Reveal>
             <div className="flex flex-col items-center text-center">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1 text-[11.5px] font-semibold uppercase tracking-wider text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
-                Development Team
-              </span>
               <h3 className="mt-2 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
                 Teaching <span className="text-gradient">Assistants</span>
               </h3>

@@ -53,12 +53,12 @@ export default function IdeWorkspace({
   experiment: Experiment;
   onExit: () => void;
 }) {
-  const [panel, setPanel] = useState<DocPanel>("theory");
+  const [panel, setPanel] = useState<DocPanel>("aim");
 
   const toggle = (next: DocPanel) => setPanel((current) => (current === next ? null : next));
 
   return (
-    <div className="fixed inset-0 z-[60] flex bg-white dark:bg-editor-bg">
+    <div className="fixed inset-0 z-[60] flex bg-white font-ui dark:bg-editor-bg">
       {/* Activity bar — VS Code's left icon rail. */}
       <div className="flex w-14 flex-shrink-0 flex-col items-center gap-1 border-r border-slate-200 bg-slate-50 py-3 dark:border-editor-border dark:bg-editor-panel">
         <ActivityIcon label="Back to experiment overview" active={false} onClick={onExit}>

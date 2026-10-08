@@ -16,7 +16,8 @@ export const THEME_INIT_SCRIPT = `
 (function () {
   try {
     var stored = localStorage.getItem("${STORAGE_KEY}");
-    var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    // Light unless the visitor has explicitly chosen dark — the page is designed white-first.
+    var theme = stored || "light";
     if (theme === "dark") document.documentElement.classList.add("dark");
   } catch (e) {}
 })();

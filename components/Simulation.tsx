@@ -76,12 +76,12 @@ export default function Simulation({
   useEnginePreload();
 
   const { run, reset, status, message, pythonVersion, pyodideVersion } = usePyodide();
-  const [code, setCode] = useState(experiment.starterCode);
+  const [code, setCode] = useState(experiment.solutionCode);
   const [result, setResult] = useState<RunResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [tab, setTab] = useState<OutputTab>("console");
   const [edited, setEdited] = useState(false);
-  const [fileMode, setFileMode] = useState<FileMode>("starter");
+  const [fileMode, setFileMode] = useState<FileMode>("solution");
   const [splitPct, setSplitPct] = useState(45);
 
   const paneRef = useRef<HTMLDivElement>(null);

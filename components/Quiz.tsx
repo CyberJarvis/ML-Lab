@@ -15,6 +15,8 @@ interface QuizProps {
 export default function Quiz({ questions, storageKey, intro }: QuizProps) {
   const [chosen, setChosen] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
+  // One question on screen at a time until the quiz is submitted.
+  const [current, setCurrent] = useState(0);
 
   const answered = Object.keys(chosen).length;
   const score = useMemo(
@@ -25,6 +27,7 @@ export default function Quiz({ questions, storageKey, intro }: QuizProps) {
   const reset = () => {
     setChosen({});
     setSubmitted(false);
+    setCurrent(0);
   };
 
   const percentage = Math.round((score / questions.length) * 100);
@@ -54,7 +57,7 @@ export default function Quiz({ questions, storageKey, intro }: QuizProps) {
             />
           </div>
           <span className="font-mono text-[11.5px] font-medium text-slate-500 dark:text-slate-400">
-            {answered}/{questions.length}
+            Question {current + 1} of {questions.length}
           </span>
         </div>
       )}
@@ -89,6 +92,8 @@ export default function Quiz({ questions, storageKey, intro }: QuizProps) {
         {questions.map((question, questionIndex) => {
           const selected = chosen[questionIndex];
           const isCorrect = selected === question.answer;
+
+          if (!submitted && questionIndex !== current) return null;
 
           return (
             <li
@@ -162,14 +167,30 @@ export default function Quiz({ questions, storageKey, intro }: QuizProps) {
       </ol>
 
       {!submitted && (
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={() => setSubmitted(true)}
-            disabled={answered === 0}
-            className="btn-shine rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 px-5 py-2.5 text-[13px] font-semibold text-white shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+            onClick={() => setCurrent((i) => Math.max(0, i - 1))}
+            disabled={current === 0}
+            className="rounded-md border border-slate-300 bg-white px-4 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
-            Submit answers
+            Previous
           </button>
+          {current < questions.length - 1 ? (
+            <button
+              onClick={() => setCurrent((i) => Math.min(questions.length - 1, i + 1))}
+              className="rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 px-5 py-2 text-[13px] font-semibold text-white"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={() => setSubmitted(true)}
+              disabled={answered === 0}
+              className="btn-shine rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 px-5 py-2 text-[13px] font-semibold text-white shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+            >
+              Submit answers
+            </button>
+          )}
           <span className="text-[12.5px] text-slate-500 dark:text-slate-400">
             {answered} of {questions.length} answered
           </span>
