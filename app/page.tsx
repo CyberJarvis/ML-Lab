@@ -11,7 +11,7 @@ export default function HomePage() {
       <p>
         Instructor: <Link href="/team">{instructor.name}</Link> (
         <a href={`mailto:${instructor.email}`}>{instructor.email}</a>) <br />
-        4 credits :- 3 Lecture hours and 2 Lab. hours per week (39h Theory + 26h Lab) <br />
+        4 credits - 39h Theory + 26h Lab <br />
         Pre-requisite: {courseHeader.prerequisites.join(", ")} <br />
         {courseInfo.semester}, {courseInfo.scheme} Scheme &ndash; Theory {courseHeader.code}, Lab{" "}
         {courseInfo.courseCodes.join(" / ")} <br />
@@ -57,7 +57,7 @@ export default function HomePage() {
         </li>
         <li>
           <p>
-            <b>Lab</b>: 2 hours per week, {institute.lab}, {courseInfo.department}
+            <b>Lab</b>: 2 hours per week
           </p>
         </li>
         <li>

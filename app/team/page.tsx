@@ -147,7 +147,8 @@ export default function TeamPage() {
                 />
               </td>
               <td style={{ verticalAlign: "middle" }}>
-                <b>{ta.name}</b> (
+                <b>{ta.name}</b> (<a href={`mailto:${ta.email}`}>{ta.email}</a>
+                {" · "}
                 <a href={ta.linkedin} target="_blank" rel="noopener noreferrer">
                   LinkedIn
                 </a>

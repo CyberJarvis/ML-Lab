@@ -66,9 +66,9 @@ export const instructor = {
 };
 
 export const teachingAssistants = [
-  { name: "Roshan Ajith", image: "/images/ta/roshan_ajith.jpg", linkedin: "https://www.linkedin.com/in/roshanajith/" },
-  { name: "Rhythm Thakur", image: "/images/ta/rhythm_thakur.png", linkedin: "https://www.linkedin.com/in/rhythm-thakur-a466b52b3/" },
-  { name: "Srinidhi Nidamarty", image: "/images/ta/srinidhi_nidamarty.jpg", linkedin: "https://www.linkedin.com/in/srinidhi-nidamarty-b56a222b2/" },
-  { name: "Yash Salunkhe", image: "/images/ta/yash_salunkhe.jpg", linkedin: "https://www.linkedin.com/in/yash-salunkhe-374a252b2/" },
-  { name: "Tarun Mudaliar", image: "/images/ta/tarun_mudaliar.jpg", linkedin: "https://www.linkedin.com/in/tarun-mudaliar-0604b92b3/" },
+  { name: "Roshan Ajith", email: "roshanajith2005@gmail.com", image: "/images/ta/roshan_ajith.jpg", linkedin: "https://www.linkedin.com/in/roshanajith/" },
+  { name: "Rhythm Thakur", email: "rhythmthakur1095@gmail.com", image: "/images/ta/rhythm_thakur.png", linkedin: "https://www.linkedin.com/in/rhythm-thakur-a466b52b3/" },
+  { name: "Srinidhi Nidamarty", email: "nidamartysrinidhi@gmail.com", image: "/images/ta/srinidhi_nidamarty.jpg", linkedin: "https://www.linkedin.com/in/srinidhi-nidamarty-b56a222b2/" },
+  { name: "Yash Salunkhe", email: "yashsalunkhe005@gmail.com", image: "/images/ta/yash_salunkhe.jpg", linkedin: "https://www.linkedin.com/in/yash-salunkhe-374a252b2/" },
+  { name: "Tarun Mudaliar", email: "tarunmudaliar@gmail.com", image: "/images/ta/tarun_mudaliar.jpg", linkedin: "https://www.linkedin.com/in/tarun-mudaliar-0604b92b3/" },
 ];

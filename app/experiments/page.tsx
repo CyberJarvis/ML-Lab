@@ -115,15 +115,6 @@ export default function ExperimentsPage() {
         </li>
       </ol>
 
-      <div className="infoblock">
-        <div className="blocktitle">Before your first run</div>
-        <div className="blockcontent">
-          <p>
-            Python runs inside your browser (Pyodide / WebAssembly). No account, no installation,
-            and no code ever leaves your machine.
-          </p>
-        </div>
-      </div>
     </JdPage>
   );
 }
