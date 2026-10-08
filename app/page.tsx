@@ -1,379 +1,501 @@
 import Link from "next/link";
-import { experiments, courseInfo, labOutcomes } from "@/lib/experiments-data";
-import { courseHeader, syllabus } from "@/lib/syllabus";
-import ExperimentCard from "@/components/ExperimentCard";
-import Reveal from "@/components/Reveal";
+import CurriculumRoadmap from "@/components/CurriculumRoadmap";
+import OfficialLabWorkbench from "@/components/OfficialLabWorkbench";
+import AssessmentRubricSection from "@/components/AssessmentRubricSection";
 import InstructorSection from "@/components/InstructorSection";
-
-const FEATURES = [
-  {
-    title: "Runs entirely in the browser",
-    desc: "Pyodide compiles CPython to WebAssembly. NumPy, SciPy, scikit-learn and matplotlib execute locally — no server, no installs.",
-    gradient: "from-amber-400 to-orange-500",
-    icon: <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />,
-  },
-  {
-    title: "A real code editor",
-    desc: "Monaco, the editor from VS Code. Write ordinary Python: imports resolve themselves, tracebacks point at your own line numbers, and figures appear with or without plt.show().",
-    gradient: "from-brand-500 to-accent-500",
-    icon: <path strokeLinecap="round" strokeLinejoin="round" d="M16 18l6-6-6-6M8 6l-6 6 6 6" />,
-  },
-  {
-    title: "Live plots & output",
-    desc: "Console text and matplotlib figures render instantly. Iterate on parameters and re-run as often as you like.",
-    gradient: "from-emerald-400 to-teal-500",
-    icon: <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M7 14l4-4 3 3 5-6" />,
-  },
-  {
-    title: "The full lab structure",
-    desc: "Aim, Theory, Pretest, Procedure, Simulation, Posttest, Further Readings and Feedback — the standard Virtual Labs section set, with auto-graded quizzes.",
-    gradient: "from-sky-400 to-blue-600",
-    icon: <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />,
-  },
-];
-
-const STEPS = [
-  {
-    number: "01",
-    title: "Pick an experiment",
-    desc: "Ten experiments follow the syllabus order — regression through ensembles to clustering and PCA. Each opens with the aim, key concepts and the algorithm.",
-  },
-  {
-    number: "02",
-    title: "Read, then run",
-    desc: "Theory sits next to a real Python editor. Complete the TODO scaffold or load the worked solution, press Run, and watch console output and plots appear.",
-  },
-  {
-    number: "03",
-    title: "Check understanding",
-    desc: "Auto-graded pretests and posttests with per-question explanations close the loop, and further readings point at where to go deeper.",
-  },
-];
-
-const ArrowIcon = (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-  </svg>
-);
-
-/** Stylised preview of the lab IDE — pure markup, no images. */
-function LabPreview() {
-  const codeLines: { n: number; parts: [string, string][] }[] = [
-    { n: 1, parts: [["kw", "from"], ["pl", " sklearn.linear_model "], ["kw", "import"], ["pl", " LinearRegression"]] },
-    { n: 2, parts: [["kw", "import"], ["pl", " matplotlib.pyplot "], ["kw", "as"], ["pl", " plt"]] },
-    { n: 3, parts: [] },
-    { n: 4, parts: [["pl", "model = LinearRegression()"]] },
-    { n: 5, parts: [["pl", "model."], ["fn", "fit"], ["pl", "(X_train, y_train)"]] },
-    { n: 6, parts: [["pl", "pred = model."], ["fn", "predict"], ["pl", "(X_test)"]] },
-    { n: 7, parts: [] },
-    { n: 8, parts: [["pl", "plt."], ["fn", "scatter"], ["pl", "(X_test, y_test)"]] },
-    { n: 9, parts: [["pl", "plt."], ["fn", "plot"], ["pl", "(X_test, pred, color="], ["st", "\"red\""], ["pl", ")"]] },
-  ];
-  const tone: Record<string, string> = {
-    kw: "text-brand-400",
-    pl: "text-slate-300",
-    fn: "text-sky-400",
-    st: "text-emerald-400",
-  };
-
-  return (
-    <div className="relative animate-float">
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0d1424]/95 shadow-2xl backdrop-blur">
-        <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-2.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-          <span className="ml-3 font-mono text-[11px] text-slate-500">linear-regression.starter.py</span>
-          <span className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
-            <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-            Run
-          </span>
-        </div>
-        <div className="grid grid-cols-5">
-          <div className="col-span-3 border-r border-white/[0.06] p-4 font-mono text-[10.5px] leading-[1.7]">
-            {codeLines.map((line) => (
-              <div key={line.n} className="flex gap-3">
-                <span className="w-3 select-none text-right text-slate-600">{line.n}</span>
-                <span className="whitespace-pre">
-                  {line.parts.map(([t, text], i) => (
-                    <span key={i} className={tone[t]}>{text}</span>
-                  ))}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="col-span-2 flex flex-col p-3">
-            <p className="mb-2 font-mono text-[9.5px] uppercase tracking-wider text-slate-500">Plots (1)</p>
-            <svg viewBox="0 0 120 90" className="w-full flex-1">
-              <line x1="10" y1="80" x2="110" y2="80" stroke="#334155" strokeWidth="1" />
-              <line x1="10" y1="80" x2="10" y2="8" stroke="#334155" strokeWidth="1" />
-              <line x1="14" y1="72" x2="106" y2="16" stroke="#818cf8" strokeWidth="1.8" strokeLinecap="round" />
-              {[[22, 66], [34, 60], [46, 55], [52, 48], [64, 44], [72, 36], [84, 30], [96, 22]].map(([x, y]) => (
-                <circle key={x} cx={x} cy={y} r="2.2" fill="#22d3ee" opacity="0.9" />
-              ))}
-            </svg>
-            <div className="mt-2 rounded-md border border-white/[0.06] bg-white/[0.03] px-2 py-1.5 font-mono text-[9px] text-slate-400">
-              R² score: 0.918 · MSE: 3.42
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
+import Reveal from "@/components/Reveal";
+import { courseHeader, textbooks, references } from "@/lib/syllabus";
+import { courseInfo, experiments, labOutcomes } from "@/lib/experiments-data";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
-      {/* ---------- Hero ---------- */}
-      <section className="relative overflow-hidden bg-white text-ink dark:bg-slate-950 dark:text-white">
-        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
-          <div className="grid items-center gap-14 lg:grid-cols-2">
-            <div>
+    <div className="min-h-screen bg-white text-ink dark:bg-slate-950 dark:text-slate-100">
+      {/* 1. Academic Hero Section */}
+      <section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-slate-50 via-white to-slate-50 py-16 sm:py-24 dark:border-slate-800 dark:from-slate-950 dark:via-slate-900/60 dark:to-slate-950">
+        {/* Ambient Subtle Gradients */}
+        <div className="pointer-events-none absolute -left-40 top-0 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl dark:bg-brand-500/15" />
+        <div className="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-accent-500/10 blur-3xl dark:bg-accent-500/15" />
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-30 dark:opacity-10" />
 
-              <h1 className="mt-5 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-                Machine Learning
-                <span className="text-gradient block pb-1">Theory & Labs.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
-                From fundamental mathematical concepts and comprehensive syllabus theory to interactive Python coding, quizzes, and live simulation experiments running directly in your browser.
-              </p>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/experiments"
-                  className="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 px-5 py-3 text-sm font-semibold text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.98]"
-                >
-                  Start Experimenting {ArrowIcon}
-                </Link>
-                <Link
-                  href="/theory"
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-5 py-3 text-sm font-semibold text-ink backdrop-blur transition-colors hover:bg-slate-200 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
-                >
-                  Read Theory Notes
-                </Link>
-                <Link
-                  href="/about"
-                  className="inline-flex items-center gap-2 px-2 py-3 text-sm font-semibold text-slate-500 transition-colors hover:text-ink dark:text-slate-300 dark:hover:text-white"
-                >
-                  About Course
-                </Link>
-              </div>
-
-              <dl className="mt-12 grid max-w-xl grid-cols-4 gap-6 border-t border-slate-200 pt-8 dark:border-white/10">
-                {[
-                  { k: `${experiments.length}`, v: "Experiments" },
-                  { k: `${syllabus.length}`, v: "Theory modules" },
-                  { k: "3", v: "Lab outcomes" },
-                  { k: "0", v: "Installs needed" },
-                ].map((s) => (
-                  <div key={s.v}>
-                    <dt className="font-display text-2xl font-semibold text-ink sm:text-3xl dark:text-white">
-                      <span className="text-gradient">{s.k}</span>
-                    </dt>
-                    <dd className="mt-1 text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{s.v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div className="hidden lg:block">
-              <LabPreview />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- Course strip ---------- */}
-      <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-2 text-[12.5px] text-slate-500 dark:text-slate-400">
-            <span className="font-semibold text-ink dark:text-slate-100">{courseInfo.courseName}</span>
-            <span>{courseInfo.institute}</span>
-            <span className="hidden sm:inline">{courseInfo.semester}</span>
-            <span className="font-mono text-[11.5px] text-slate-400 dark:text-slate-500">
-              {courseInfo.courseCodes.join(" · ")}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- Instructor Section ---------- */}
-      <InstructorSection />
-
-
-      {/* ---------- How it works ---------- */}
-      <section className="relative overflow-hidden border-y border-slate-200 bg-slate-50 py-16 sm:py-20 dark:border-slate-800 dark:bg-slate-900/40">
-        <div className="absolute inset-0 bg-grid opacity-60 dark:opacity-20" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
-          <Reveal>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-400">
-              How it works
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
-              From zero to a trained model in three steps
-            </h2>
-          </Reveal>
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
-            {STEPS.map((step, i) => (
-              <Reveal key={step.number} delay={i * 110}>
-                <div className="relative h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-card dark:border-slate-800 dark:bg-slate-900">
-                  <span className="font-display text-4xl font-semibold text-brand-600/15 dark:text-brand-400/20">
-                    {step.number}
-                  </span>
-                  <h3 className="mt-3 font-display text-[16px] font-semibold text-ink dark:text-slate-100">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-[13.5px] leading-relaxed text-slate-500 dark:text-slate-400">
-                    {step.desc}
-                  </p>
-                  {i < STEPS.length - 1 && (
-                    <svg
-                      className="absolute -right-4 top-1/2 hidden h-5 w-5 -translate-y-1/2 text-brand-400 md:block"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* ---------- Theory / syllabus ---------- */}
-      <section className="bg-white py-16 sm:py-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div className="max-w-2xl">
-                <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-400">
-                  Curriculum
-                </p>
-                <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
-                  The full {courseHeader.code} syllabus
-                </h2>
-                <p className="mt-3 text-slate-500 dark:text-slate-400">
-                  Every module and topic from the official course, mapped to the experiment that
-                  puts it into practice — {courseHeader.totalHours} hours across {syllabus.length} modules.
-                </p>
+          <div className="mx-auto max-w-4xl text-center">
+            <Reveal>
+              {/* Official Accreditation & Course Badges */}
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand-600 dark:bg-brand-400" />
+                  SIES GST · Dept. of Computer Engineering
+                </span>
+                <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 font-mono text-[11px] font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                  University of Mumbai · CBCGS R-2019 · Sem VII
+                </span>
+                <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 font-mono text-[11px] font-semibold text-brand-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-brand-400">
+                  Course: CSC701 / CEL701 / CSL7001
+                </span>
               </div>
-              <Link
-                href="/theory"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:border-brand-300 hover:text-brand-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-500/50 dark:hover:text-brand-300"
-              >
-                Read the theory {ArrowIcon}
-              </Link>
-            </div>
-          </Reveal>
 
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {syllabus.map((mod, i) => (
-              <Reveal key={mod.number} delay={i * 70}>
+              {/* Main Heading */}
+              <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.12] tracking-tight text-ink sm:text-5xl lg:text-6xl dark:text-white">
+                Machine Learning
+                <span className="text-gradient block pb-1">
+                  Theory Curriculum & Virtual Laboratory
+                </span>
+              </h1>
+
+              {/* Subtitle */}
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
+                The official educational portal for B.E. Computer Engineering at SIES Graduate School of Technology. Integrating 39 hours of rigorous syllabus lectures across 6 modules with 10 zero-installation browser-based Python lab simulations.
+              </p>
+
+              {/* Action CTA Buttons */}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <Link
-                  href="/theory"
-                  className="group flex h-full items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-500/50"
+                  href="#experiments"
+                  className="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 px-6 py-3.5 text-xs font-bold text-white shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-accent-600 font-mono text-[13px] font-bold text-white shadow-md">
-                    {mod.number}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13.5px] font-semibold text-ink group-hover:text-brand-700 dark:text-slate-100 dark:group-hover:text-brand-400">
-                      {mod.title}
-                    </p>
-                    <p className="mt-1 text-[12px] text-slate-500 dark:text-slate-400">
-                      {mod.hours} hrs · {mod.topics.length} topics
-                    </p>
-                  </div>
-                  <svg
-                    className="mt-1 h-4 w-4 flex-shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-500 dark:text-slate-600"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  <span>Launch 10 Virtual Labs</span>
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
+                <Link
+                  href="#curriculum"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-xs font-bold text-slate-700 shadow-sm transition-colors hover:border-brand-300 hover:text-brand-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-brand-500/50 dark:hover:text-brand-300"
+                >
+                  <span>Curriculum (39h)</span>
+                </Link>
 
-      {/* ---------- Lab outcomes ---------- */}
-      <section className="border-t border-slate-200 bg-slate-50 py-16 sm:py-20 dark:border-slate-800 dark:bg-slate-900/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <Reveal>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-400">
-              Outcomes
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
-              Lab outcomes
-            </h2>
-            <p className="mt-3 text-slate-500 dark:text-slate-400">
-              On completing this laboratory course, you will be able to:
-            </p>
-          </Reveal>
-          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-            {courseInfo.labOutcomes.map((lo, i) => {
-              const info = labOutcomes[lo.code];
-              const count = experiments.filter((e) => e.lo === lo.code).length;
-              return (
-                <Reveal key={lo.code} delay={i * 100}>
-                  <div className="card-glow h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900">
-                    <div className="flex items-center justify-between">
-                      <span className={`inline-flex items-center rounded-md px-2.5 py-1 text-[12px] font-bold ring-1 ${info.className}`}>
-                        {info.label}
-                      </span>
-                      <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
-                        {count} experiment{count !== 1 ? "s" : ""}
-                      </span>
-                    </div>
-                    <p className="mt-4 text-[14px] leading-relaxed text-slate-600 dark:text-slate-300">{lo.text}</p>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+                <a
+                  href="/documents/SIES_GST_ML_Lab_Manual.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-5 py-3.5 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                >
+                  <svg className="h-4 w-4 text-rose-500" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5h3V13h-3v2.5H8V9h3.5v2.5H9.5zM16 15h-1.5v-6H16c1.1 0 2 .9 2 2v2c0 1.1-.9 2-2 2z" />
+                  </svg>
+                  <span>Lab Manual (PDF)</span>
+                </a>
 
-      {/* ---------- Experiment index ---------- */}
-      <section className="bg-white py-16 sm:py-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div className="max-w-2xl">
-                <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-400">
-                  The lab
-                </p>
-                <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
-                  The Experiments
-                </h2>
-                <p className="mt-3 text-slate-500 dark:text-slate-400">
-                  Regression through to dimensionality reduction, in the order the syllabus takes them.
-                </p>
+                <Link
+                  href="#rubrics"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-transparent px-4 py-3.5 text-xs font-semibold text-slate-600 hover:text-ink dark:text-slate-400 dark:hover:text-white"
+                >
+                  <span>Assessment Rubrics (150M)</span>
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </Link>
               </div>
-              <Link
-                href="/experiments"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:border-brand-300 hover:text-brand-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-500/50 dark:hover:text-brand-300"
-              >
-                View all {ArrowIcon}
-              </Link>
+
+              {/* Key Course Metrics Row */}
+              <dl className="mt-12 grid grid-cols-2 gap-4 border-t border-slate-200 pt-8 sm:grid-cols-4 dark:border-slate-800">
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    Course Weightage
+                  </dt>
+                  <dd className="mt-1 font-display text-2xl font-bold text-ink dark:text-white">
+                    4 <span className="text-xs font-normal text-slate-500">Credits</span>
+                  </dd>
+                  <span className="text-xs text-brand-600 dark:text-brand-400">
+                    3h Theory + 2h Practical / wk
+                  </span>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    Contact Hours
+                  </dt>
+                  <dd className="mt-1 font-display text-2xl font-bold text-ink dark:text-white">
+                    65 <span className="text-xs font-normal text-slate-500">Total Hours</span>
+                  </dd>
+                  <span className="text-xs text-brand-600 dark:text-brand-400">
+                    39h Theory · 26h Lab
+                  </span>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    Virtual Practicals
+                  </dt>
+                  <dd className="mt-1 font-display text-2xl font-bold text-ink dark:text-white">
+                    10 <span className="text-xs font-normal text-slate-500">Experiments</span>
+                  </dd>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                    LO1 to LO3 Lab Outcomes
+                  </span>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    Evaluation Total
+                  </dt>
+                  <dd className="mt-1 font-display text-2xl font-bold text-ink dark:text-white">
+                    150 <span className="text-xs font-normal text-slate-500">Marks</span>
+                  </dd>
+                  <span className="text-xs text-amber-600 dark:text-amber-400">
+                    80M Theory + 70M Lab/IA
+                  </span>
+                </div>
+              </dl>
+            </Reveal>
+          </div>
+
+          {/* 3 Course Pillars / Pathways Cards */}
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <Link
+              href="#curriculum"
+              className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-500/50"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-50 font-bold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
+                📘
+              </div>
+              <h3 className="mt-4 font-display text-base font-bold text-ink group-hover:text-brand-600 dark:text-slate-100 dark:group-hover:text-brand-400">
+                Theory Curriculum (39h)
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                6 structured modules spanning mathematical foundations, regression, tree ensembles, SVMs, GMM clustering, and PCA.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400">
+                Explore 6 Modules →
+              </span>
+            </Link>
+
+            <Link
+              href="#experiments"
+              className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-500/50"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                🧪
+              </div>
+              <h3 className="mt-4 font-display text-base font-bold text-ink group-hover:text-emerald-600 dark:text-slate-100 dark:group-hover:text-emerald-400">
+                10 Virtual Practicals (26h)
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                In-browser Python IDE with live NumPy, scikit-learn, and Matplotlib execution. No installations or servers required.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                Launch Virtual Lab →
+              </span>
+            </Link>
+
+            <Link
+              href="#rubrics"
+              className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-lift dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-500/50"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-50 font-bold text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
+                ⚖️
+              </div>
+              <h3 className="mt-4 font-display text-base font-bold text-ink group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400">
+                Continuous Assessment (150M)
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                Official 5-criteria grading rubric (Preparedness, Documentation, Debugging, Punctuality, Ethics) and marking scheme.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400">
+                View Grading Rubrics →
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Live Academic Notice Banner */}
+      <section className="border-b border-slate-200 bg-slate-100/70 py-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 text-xs sm:px-6">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <span className="font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              Department Notice:
+            </span>
+            <span className="text-slate-600 dark:text-slate-400">
+              Lab 06 Continuous Assessment in progress. Submit Experiments 01 to 10 with verified R² and confusion matrices.
+            </span>
+          </div>
+
+          <div className="hidden items-center gap-3 sm:flex text-[11px] text-slate-500">
+            <span>Course Code: <strong>CSC701 / CEL701</strong></span>
+            <span>•</span>
+            <span>Faculty In-charge: <strong>Dr. Deepika Kumari</strong></span>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Department Vision, Mission & Academic Framework */}
+      <section className="relative border-b border-slate-200 bg-white py-16 dark:border-slate-800 dark:bg-slate-950 sm:py-20">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+          <Reveal>
+            <div className="flex flex-col items-center text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-[11.5px] font-semibold uppercase tracking-wider text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+                Institutional Foundation
+              </span>
+              <h2 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
+                Department Vision & <span className="text-gradient">Academic Framework</span>
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                SIES Graduate School of Technology, Department of Computer Engineering — aligning rigorous engineering fundamentals with contemporary industry applications.
+              </p>
             </div>
           </Reveal>
 
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {experiments.slice(0, 6).map((experiment, i) => (
-              <Reveal key={experiment.id} delay={i * 70}>
-                <ExperimentCard experiment={experiment} />
-              </Reveal>
-            ))}
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
+            {/* Vision & Mission Card */}
+            <div className="lg:col-span-7">
+              <div className="h-full rounded-3xl border border-slate-200 bg-slate-50/50 p-6 shadow-card dark:border-slate-800 dark:bg-slate-900/40 sm:p-8">
+                {/* Department Vision */}
+                <div>
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                    Department Vision
+                  </span>
+                  <p className="mt-2 text-base font-semibold leading-relaxed text-ink dark:text-slate-100">
+                    &quot;To be a centre of Excellence in Computer Engineering to fulfill the rapidly growing needs of the Society.&quot;
+                  </p>
+                </div>
+
+                {/* Department Mission M1-M4 */}
+                <div className="mt-6 border-t border-slate-200/80 pt-6 dark:border-slate-800">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Department Mission
+                  </span>
+                  <div className="mt-3 space-y-3">
+                    {[
+                      { code: "M1", text: "To impart quality education to meet the professional challenges in the area of Computer Engineering." },
+                      { code: "M2", text: "To create an environment for research, innovation, professional and social development." },
+                      { code: "M3", text: "To nurture lifelong learning skills for achieving professional growth." },
+                      { code: "M4", text: "To strengthen the alumni and industry connect." },
+                    ].map((m) => (
+                      <div key={m.code} className="flex items-start gap-3 rounded-xl bg-white p-3 shadow-sm border border-slate-100 dark:border-slate-800 dark:bg-slate-900/60">
+                        <span className="rounded bg-brand-100 px-2 py-0.5 font-mono text-[11px] font-bold text-brand-800 dark:bg-brand-900/50 dark:text-brand-300">
+                          {m.code}
+                        </span>
+                        <p className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+                          {m.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* PO / PSO & Lab Outcomes Card */}
+            <div className="space-y-6 lg:col-span-5">
+              {/* Program Specific Outcomes */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card dark:border-slate-800 dark:bg-slate-900">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-accent-600 dark:text-accent-400">
+                  Program Specific Outcomes (PSOs)
+                </span>
+                <div className="mt-3 space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                  <div className="border-l-2 border-brand-500 pl-3">
+                    <strong className="text-slate-900 dark:text-white">PSO1:</strong> Apply computational and logical skills to solve Computer engineering problems.
+                  </div>
+                  <div className="border-l-2 border-accent-500 pl-3">
+                    <strong className="text-slate-900 dark:text-white">PSO2:</strong> Develop interdisciplinary skills and acquaint with cutting-edge technologies in software industries.
+                  </div>
+                </div>
+              </div>
+
+              {/* Lab Outcomes (LO1 - LO3) */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card dark:border-slate-800 dark:bg-slate-900">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                  Machine Learning Lab Outcomes (LO)
+                </span>
+                <div className="mt-3 space-y-2.5">
+                  {courseInfo.labOutcomes.map((lo) => {
+                    const info = labOutcomes[lo.code];
+                    const count = experiments.filter((e) => e.lo === lo.code).length;
+                    return (
+                      <div key={lo.code} className="flex items-start justify-between gap-3 rounded-xl bg-slate-50 p-2.5 dark:bg-slate-800/40">
+                        <div>
+                          <span className={`inline-block rounded px-1.5 py-0.5 text-[10px] font-bold ${info.className}`}>
+                            {lo.code}
+                          </span>
+                          <p className="mt-1 text-xs text-slate-700 dark:text-slate-300">{lo.text}</p>
+                        </div>
+                        <span className="text-[10px] font-semibold text-slate-400">
+                          {count} Labs
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Curriculum & Lecture Roadmap (39 Hours Theory) */}
+      <CurriculumRoadmap />
+
+      {/* 5. Virtual Laboratory Workbench (10 Prescribed Practicals) */}
+      <OfficialLabWorkbench />
+
+      {/* 6. Assessment Rubrics & Laboratory Ethics Section */}
+      <AssessmentRubricSection />
+
+      {/* 7. Faculty In-Charge & Teaching Assistants Team */}
+      <InstructorSection />
+
+      {/* 8. Prescribed Textbooks & Reference Literature */}
+      <section className="relative border-b border-slate-200 bg-white py-16 dark:border-slate-800 dark:bg-slate-950 sm:py-20">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+          <Reveal>
+            <div className="flex flex-col items-center text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-[11.5px] font-semibold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+                Academic Bibliography
+              </span>
+              <h2 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
+                Prescribed Textbooks & <span className="text-gradient">Reference Literature</span>
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                Official reading list mandated by the University of Mumbai Machine Learning (CSC701) syllabus.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
+            {/* Prescribed Textbooks */}
+            <div className="rounded-3xl border border-slate-200 bg-slate-50/50 p-6 shadow-card dark:border-slate-800 dark:bg-slate-900/40 sm:p-8">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-500/10 font-bold text-brand-600 dark:bg-brand-500/20 dark:text-brand-400">
+                  📚
+                </span>
+                <h3 className="font-display text-base font-bold text-ink dark:text-slate-100">
+                  Prescribed Textbooks
+                </h3>
+              </div>
+
+              <div className="mt-5 space-y-3.5">
+                {textbooks.map((tb, idx) => (
+                  <div
+                    key={tb.title}
+                    className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+                  >
+                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-brand-50 font-mono text-[11px] font-bold text-brand-700 dark:bg-brand-950/60 dark:text-brand-300">
+                      T{idx + 1}
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink dark:text-slate-100">
+                        {tb.title}
+                      </h4>
+                      <p className="mt-0.5 text-[11.5px] text-slate-500 dark:text-slate-400">
+                        {tb.author} {tb.publisher ? `· ${tb.publisher}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Prescribed Reference Books */}
+            <div className="rounded-3xl border border-slate-200 bg-slate-50/50 p-6 shadow-card dark:border-slate-800 dark:bg-slate-900/40 sm:p-8">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-500/10 font-bold text-accent-600 dark:bg-accent-500/20 dark:text-accent-400">
+                  📖
+                </span>
+                <h3 className="font-display text-base font-bold text-ink dark:text-slate-100">
+                  Reference Books & Papers
+                </h3>
+              </div>
+
+              <div className="mt-5 space-y-3.5">
+                {references.slice(0, 4).map((ref, idx) => (
+                  <div
+                    key={ref.title}
+                    className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+                  >
+                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-accent-50 font-mono text-[11px] font-bold text-accent-700 dark:bg-accent-950/60 dark:text-accent-300">
+                      R{idx + 1}
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink dark:text-slate-100">
+                        {ref.title}
+                      </h4>
+                      <p className="mt-0.5 text-[11.5px] text-slate-500 dark:text-slate-400">
+                        {ref.author} {ref.publisher ? `· ${ref.publisher}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Official Document Downloads & Laboratory Support Center */}
+      <section className="relative bg-slate-50 py-16 dark:bg-slate-900/60 sm:py-20">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-card dark:border-slate-800 dark:bg-slate-900 sm:p-12">
+            <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+              <div className="lg:col-span-8">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300">
+                  Official SIES GST Academic Publications
+                </span>
+                <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-slate-100">
+                  Download Official Laboratory Manuals & Curricula
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  Access authentic institutional documentation published by the Department of Computer Engineering for B.E. Semester VII (R-2019 Scheme).
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-4">
+                  <a
+                    href="/documents/SIES_GST_ML_Lab_Manual.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2.5 rounded-xl bg-slate-900 px-5 py-3 text-xs font-bold text-white shadow-md transition-all hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+                  >
+                    <svg className="h-4 w-4 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5h3V13h-3v2.5H8V9h3.5v2.5H9.5zM16 15h-1.5v-6H16c1.1 0 2 .9 2 2v2c0 1.1-.9 2-2 2z" />
+                    </svg>
+                    <span>Download Final ML Lab Manual SH-2024 (PDF)</span>
+                  </a>
+
+                  <a
+                    href="/documents/ML_Experiment_List_FH2026.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-5 py-3 text-xs font-bold text-slate-700 transition-colors hover:border-brand-300 hover:bg-white hover:text-brand-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                  >
+                    <svg className="h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Download Experiment List FH-2026 (PDF)</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200/80 bg-slate-50 p-5 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400 lg:col-span-4">
+                <span className="font-bold text-slate-900 dark:text-slate-100">
+                  Laboratory Location:
+                </span>
+                <p className="mt-1">
+                  Computer Engineering Lab 06, SIES GST Nerul, Navi Mumbai 400706.
+                </p>
+                <div className="mt-3 border-t border-slate-200/80 pt-3 dark:border-slate-700">
+                  <span className="font-bold text-slate-900 dark:text-slate-100">
+                    Course In-Charge:
+                  </span>
+                  <p className="mt-1">
+                    Dr. Deepika Kumari (Associate Professor, Ph.D. IIT Delhi)
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-brand-600 dark:text-brand-400">
+                    deepikak@sies.edu.in
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </div>
   );
 }
-

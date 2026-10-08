@@ -85,7 +85,7 @@ const TEACHING_ASSISTANTS: TeachingAssistant[] = [
 
 export default function InstructorSection() {
   return (
-    <section className="relative overflow-hidden border-b border-slate-200 bg-slate-50/60 py-16 dark:border-slate-800 dark:bg-slate-900/40 sm:py-24">
+    <section id="instructor" className="relative overflow-hidden border-b border-slate-200 bg-slate-50/60 py-16 dark:border-slate-800 dark:bg-slate-900/40 sm:py-24">
       {/* Background ambient accents */}
       <div className="pointer-events-none absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl dark:bg-brand-500/15" />
       <div className="pointer-events-none absolute -right-40 bottom-1/4 h-96 w-96 rounded-full bg-accent-500/10 blur-3xl dark:bg-accent-500/15" />
