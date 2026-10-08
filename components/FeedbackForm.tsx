@@ -16,16 +16,33 @@ export default function FeedbackForm({ experimentId }: { experimentId: string })
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState("");
   const [saved, setSaved] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const save = () => {
+  const save = async () => {
+    setSending(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ experimentId, rating, comment }),
+      });
+      if (!response.ok) throw new Error(`Feedback API returned ${response.status}`);
+    } catch {
+      setError("Could not send your feedback. Check your connection and try again.");
+      setSending(false);
+      return;
+    }
     try {
       localStorage.setItem(
         `${STORAGE_PREFIX}:${experimentId}`,
         JSON.stringify({ rating, comment, at: new Date().toISOString() })
       );
     } catch {
-      // Private browsing or blocked site data — the note below still applies.
+      // Private browsing or blocked site data — the server copy is what matters.
     }
+    setSending(false);
     setSaved(true);
   };
 
@@ -41,9 +58,8 @@ export default function FeedbackForm({ experimentId }: { experimentId: string })
           <p className="font-display text-base font-semibold text-emerald-900 dark:text-emerald-200">Thank you.</p>
         </div>
         <p className="mt-1.5 text-[13.5px] leading-relaxed text-emerald-800 dark:text-emerald-300">
-          Your response has been kept in this browser. This lab runs entirely on your
-          machine with no server behind it, so nothing was transmitted anywhere — please
-          also pass substantive feedback to your lab in-charge.
+          Your feedback has been submitted to the course team. Only the rating and
+          comment are stored — no name or account is attached.
         </p>
         <button
           onClick={() => setSaved(false)}
@@ -84,6 +100,7 @@ export default function FeedbackForm({ experimentId }: { experimentId: string })
           What would you change?
         </label>
         <textarea
+          maxLength={2000}
           id="feedback-comment"
           rows={5}
           value={comment}
@@ -93,12 +110,18 @@ export default function FeedbackForm({ experimentId }: { experimentId: string })
         />
       </div>
 
+      {error && (
+        <p role="alert" className="text-[13px] font-medium text-red-600 dark:text-red-400">
+          {error}
+        </p>
+      )}
+
       <button
         onClick={save}
-        disabled={rating === null && comment.trim() === ""}
+        disabled={sending || (rating === null && comment.trim() === "")}
         className="btn-shine rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 px-5 py-2.5 text-[13px] font-semibold text-white shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
       >
-        Save feedback
+        {sending ? "Sending…" : "Submit feedback"}
       </button>
     </div>
   );
